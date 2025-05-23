@@ -20,15 +20,11 @@ function Home() {
 
   const handleStart = () => {
     if (player1Name && player2Name) {
-      console.log("Player 1 Name:", player1Name, typeof player1Name);
-      console.log("Player 2 Name:", player2Name, typeof player2Name);
-      console.log("Pushing to pathname:", "/game", typeof "/game"); // Should be string
 
       const gameUrl = `/game?player1Name=${encodeURIComponent(
         player1Name
       )}&player2Name=${encodeURIComponent(player2Name)}`;
 
-      console.log("Pushing to URL string:", gameUrl); // Optional logging
 
       // Use router.push with the constructed URL string
       router.push(gameUrl);

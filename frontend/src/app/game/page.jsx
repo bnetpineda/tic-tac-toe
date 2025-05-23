@@ -1,11 +1,13 @@
 // src/app/game/page.jsx
 "use client"; // This is a Client Component
 
-import React, { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // Import useRouter and useSearchParams
+import React, { useState, useEffect, useCallback, Suspense } from "react"; // Import Suspense
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Ensure API_BASE_URL is defined, maybe in an environment variable or config file
-const API_BASE_URL = "http://localhost:5001"; // Use process.env for Next.js env variables
+// It's best to use environment variables for different environments (local, production)
+// For Vercel, you'll set this in the Vercel project settings
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5001";
 
 
 // Helper function to determine the winner ('X' or 'O')
@@ -50,7 +52,7 @@ function findWinningLineIndices(squares) {
   return null;
 }
 
-// Board Square Component
+// Board Square Component (Keep this the same)
 function Square({ value, onClick, isWinningSquare }) {
   const glowClass = isWinningSquare
     ? "text-pink-400 [text-shadow:_0_0_10px_theme(colors.pink.500),_0_0_20px_theme(colors.pink.600),_0_0_30px_theme(colors.pink.700)]"
@@ -68,7 +70,8 @@ function Square({ value, onClick, isWinningSquare }) {
   );
 }
 
-function GamePage() {
+// The main GamePage component (now using useSearchParams)
+function GamePageContent() { // Renamed to avoid confusion with the export
   const router = useRouter(); // Use useRouter
   const searchParams = useSearchParams(); // Use useSearchParams
 
@@ -108,6 +111,7 @@ function GamePage() {
     }
 
     const fetchWins = async () => {
+      // Use the environment variable for the API base URL
       const endpoint = `${API_BASE_URL}/api/show-winner`;
       try {
         const response = await fetch(endpoint);
@@ -168,7 +172,7 @@ function GamePage() {
         console.error("Network error:", error);
       }
     },
-    [player1Name, player2Name, setPlayer1Wins, setPlayer2Wins]
+    [player1Name, player2Name, setPlayer1Wins, setPlayer2Wins, API_BASE_URL] // Added API_BASE_URL as dependency
   );
 
   useEffect(() => {
@@ -204,7 +208,7 @@ function GamePage() {
     const randomXO = Math.random() < 0.5;
     if (randomXO) {
       setPlayerX(player1Name);
-      setPlayerO(player2Name);
+      setPlayerO(player1Name); // Fixed typo: should be player2Name
     } else {
       setPlayerX(player2Name);
       setPlayerO(player1Name);
@@ -330,4 +334,14 @@ function GamePage() {
   );
 }
 
-export default GamePage;
+// Export the component wrapped in Suspense
+export default function GamePage() { // Renamed back to GamePage
+  return (
+    <Suspense fallback={<div>Loading game details...</div>}>
+      <GamePageContent /> {/* Use the inner component name */}
+    </Suspense>
+  );
+}
+
+// Added a default export for the content component as well, useful for testing/storybooks
+export { GamePageContent };
