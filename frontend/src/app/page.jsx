@@ -6,11 +6,7 @@ import { useRouter } from "next/navigation"; // Import useRouter from next/navig
 
 // Ensure API_BASE_URL is defined, maybe in an environment variable or config file
 // For this example, I'll add a placeholder.
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5001"; // Example placeholder
-
-console.log(process.env.NEXT_PUBLIC_API_BASE_URL); // Debugging line
-
+const API_BASE_URL = "http://localhost:5001"; // Example placeholder
 function Home() {
   const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
