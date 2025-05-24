@@ -1,4 +1,3 @@
-// src/app/game/page.jsx
 "use client"; // This is a Client Component
 
 import React, { useState, useEffect, useCallback, Suspense } from "react"; // Import Suspense
